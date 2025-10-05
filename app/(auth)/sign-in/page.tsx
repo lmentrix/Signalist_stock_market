@@ -8,13 +8,15 @@ import errors = Undici.errors;
 import {useForm} from "react-hook-form";
 import {Button} from "@/components/ui/button";
 import FooterLink from "@/components/forms/FooterLink";
+import {signInWithEmail, signUpWithEmail} from "@/lib/actions/auth_actions";
+import {toast} from "sonner";
+import {useRouter} from "next/navigation";
 
 const SignInPage = () => {
-
+    const router = useRouter()
     const {
         register,
         handleSubmit,
-        control,
         formState: { errors, isSubmitting },
     } = useForm<SignUpFormData>({
         defaultValues:{
@@ -26,11 +28,17 @@ const SignInPage = () => {
 
     })
 
-    const onSubmit = async (data:SignUpFormData) =>{
+    const onSubmit = async (data:SignInFormData) =>{
         try {
-            console.log(data)
+            //signup with email
+            const result = await signInWithEmail(data)
+            if(result.success) router.push('/')
+
+
         }catch (e) {
             console.error(e)
+            toast.error('sign in failed',{
+                description: e instanceof Error ? e.message : 'failed to sign-in'            })
         }
     }
 
