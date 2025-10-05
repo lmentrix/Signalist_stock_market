@@ -8,9 +8,13 @@ import SelectField from "@/components/forms/SelectField";
 import {INVESTMENT_GOALS, PREFERRED_INDUSTRIES, RISK_TOLERANCE_OPTIONS} from "@/lib/constants";
 import {CountrySelectField} from "@/components/forms/CountrySelectField";
 import FooterLink from "@/components/forms/FooterLink";
+import {signUpWithEmail} from "@/lib/actions/auth_actions";
+import {useRouter} from "next/navigation";
+import {toast} from "sonner";
 
 
 const SignUpPage = () => {
+    const router = useRouter()
 
     const {
         register,
@@ -23,7 +27,7 @@ const SignUpPage = () => {
             email: '',
             password :'',
             country:'us',
-            investmentGoal: 'Growth',
+            investmentGoals: 'Growth',
             riskTolerance: 'Medium',
             preferredIndustry:'Technology'
         },
@@ -32,9 +36,15 @@ const SignUpPage = () => {
     })
     const onSubmit = async (data:SignUpFormData) =>{
         try {
-            console.log(data)
+            //signup with email
+            const result = await signUpWithEmail(data)
+            if(result.success) router.push('/')
+
+
         }catch (e) {
             console.error(e)
+            toast.error('sign up failed',{
+                description: e instanceof Error ? e.message : 'failed to create account'            })
         }
     }
    
@@ -97,7 +107,7 @@ const SignUpPage = () => {
                              required
                 />
 
-                <Button type={"submit"} disabled={isSubmitting} className={"yellow-btn w-full mt-5"}>
+                <Button  type={"submit"} disabled={isSubmitting} className={"yellow-btn w-full mt-5"}>
                     {isSubmitting ? 'Creating account' : 'Start Your Investing Journey'}
                 </Button>
                 <FooterLink text={"Already have an account? "} linkText={"Sign in"} href={"/sign-in"}/>

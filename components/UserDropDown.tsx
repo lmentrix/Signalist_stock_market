@@ -17,7 +17,7 @@ const UserDropDown = () => {
   };
 
   const user = {
-    name: "Yifei",
+    name: "Yifssssei",
     email: "lancelotzhou123@gmail.com",
   };
 
